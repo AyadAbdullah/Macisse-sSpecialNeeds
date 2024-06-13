@@ -1,0 +1,17 @@
++----------------------------+-------------------------------------------------------------------------------------------+
+| Location                   | Rooms                                                                                     |
++============================+===========================================================================================+
+| Hell's Kitchen Docks       | Lookout Point, Smuggler's Den, Warehouse, Secret Passage, Office, Shipping Bay            |
++----------------------------+-------------------------------------------------------------------------------------------+
+| Gang Hideout               | Main Hall, Weapon Storage, Leader's Room, Secret Exit, Surveillance Room, Torture Chamber |
++----------------------------+-------------------------------------------------------------------------------------------+
+| Hell's Kitchen Downtown    | Bar, Apartment Block, Bank, Police Station, Hospital, The Pierre                          |
++----------------------------+-------------------------------------------------------------------------------------------+
+| Alleyway                   | Backstreet, Hidden Nook, Garbage Dump, Fire Escape, Dead End, Underground Entrance        |
++----------------------------+-------------------------------------------------------------------------------------------+
+| New York Bulletin Building | Newsroom, Editor's Office, Archive Room, Cubicle, Printing Press, Rooftop                 |
++----------------------------+-------------------------------------------------------------------------------------------+
+| Prison                     | Cell Block, Guard Room, Warden's Office, Cafeteria, Gym, Solitary Confinement             |
++----------------------------+-------------------------------------------------------------------------------------------+
+| Wilson Fisk's Penthouse    | Entrance, Art Gallery, Safe Room, Master Bedroom, Private Balcony, Living Room            |
++----------------------------+-------------------------------------------------------------------------------------------+
