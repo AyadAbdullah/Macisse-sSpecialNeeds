@@ -1,5 +1,7 @@
 #map.py
+#map.py
 from tabulate import tabulate
+import random
 
 
 # overall_map_room
@@ -36,7 +38,7 @@ class Map:
                 "Master Bedroom", "Private Balcony","Living Room"
             ]
         }
-    
+
         self.rooms_clues = {
             "Hell's Kitchen Docks":{ 
                 #"Smuggler's Den":["Thug", "Goon"],#Not in Alpha
@@ -56,7 +58,7 @@ class Map:
                 #"Editor's Room":["Jasper Evans"],
                 #"Office":["Bullseye"],
                 "Cubicle":[""]
-    
+
             },
             "Prison": {
                 "Cell Block": ["Inmate information"],
@@ -67,28 +69,28 @@ class Map:
                 "Solitary Confinement": ["Isolated Prisoner"],
             },       
             "Wilson Fisk's Penthouse": {
-                "Entrance": ["Buisness documents"],
+                "Entrance": ["Business documents"],
                 "Art Gallery": ["Expensive art"],
                 #"Safe Room": ["Weapon mod"],#Not in Alpha
                 "Master Bedroom": ["Personal belongings"],
                 "Private Balcony": ["Panoramic view"],
                 "Living Room": ["Luxury decor"],
             }
-    
+
     }
-    
+
     def print_game_map_table(self, filename="Overall_map.txt"):
         headers = ['Location', 'Rooms']
         table_data = [(location, ', '.join(rooms))
                       for location, rooms in self.overall_map_room.items()]
         table = tabulate(table_data, headers=headers, tablefmt='grid')
-    
+
         try:
             with open(filename, 'w') as file:
                 file.write(table)
         except IOError:
-            print("Unble to export map layout")
-    
+            print("Unable to export map layout")
+
     def print_location_table(self):
         """
         Prints just the location names in a table. 
@@ -97,7 +99,7 @@ class Map:
         rows = [locations[i:i + 7] for i in range(0, len(locations), 7)]
         print("Locations: ")
         print(tabulate(rows, tablefmt="grid"))
-    
+
     def get_location_index(self, location_name):
         """
         Will collect the index of a location in the overall map list
@@ -106,11 +108,11 @@ class Map:
             if location == location_name:
                 return index
         return -1
-    
+
 class DetailedMap(Map):
     def __init__(self):
         super().__init__()
-    
+
     def print_detailed_map(self, location, filename='Rooms_map.txt'):
         if location not in self.overall_map_room:
             print(f"No map found for {location}")
@@ -118,17 +120,17 @@ class DetailedMap(Map):
         rooms = self.overall_map_room[location]
         rows = [rooms[i: i + 3] for i in range(0, len(rooms), 3)]
         table = tabulate(rows, tablefmt="grid")
-    
+
         try:
             with open(filename, 'w') as file:
                 file.write(table)
         except IOError:
             print(f"Unable to export file for {location}")
-    
+
     def view_map(self, filename="Rooms_map.txt"):
-    
+
         #Displays the map file content
-    
+
         try:
             with open(filename, 'r') as file:
                 print(file.read())
@@ -220,7 +222,7 @@ class Inventory:
 
     def remove_item(self, item):
         if item in self.items:
-            del self.items
+            del self.items[item]
             print(f"Removed {item} from the inventory.")
         else:
             print(f"You don't have {item} in your inventory")
@@ -228,6 +230,7 @@ class Inventory:
     def view_inventory(self):
         if not self.items:
             print("Your inventory is empty")
+        else:
             for item, description in self.items.items():
                 print(f"{item}: {description}")
 
@@ -240,63 +243,102 @@ class Inventory:
 
 
 class Interact():
-        def __init__(self, rooms_clues):
-            self.rooms_clues = rooms_clues
-            self.inv = Inventory()
-            self.gen_list = {
-                "Documents":"You read the documents on the desk. It reads:" 
-                            +" Weapons delivered. Send this to the boss. Thank"
-                            +" us later.\n" 
-                            +" Justin Hammer",
+    def __init__(self, rooms_clues):
+        self.rooms_clues = rooms_clues
+        self.inv = Inventory()
+        self.gen_list = {
+            "Documents":"You read the documents on the desk. It reads:" 
+                        +" Weapons delivered. Send this to the boss. Thank"
+                        +" us later.\n" 
+                        +" Justin Hammer",
 
-                "Letter to Kingpin": "You read the letter beside the documents"+
-                                    " It reads: Hey boss, we received the weapons"+
-                                    " They should be headed to the Russians Hideout."+
-                                    " Yours Truly"+
-                                    " Turk",
+            "Letter to Kingpin": "You read the letter beside the documents"+
+                                " It reads: Hey boss, we received the weapons"+
+                                " They should be headed to the Russians Hideout."+
+                                " Yours Truly"+
+                                " Turk",
 
-                "Illegal shipment papers": "You look at the shipment paper." +
-                                            "They look forged", 
+            "Illegal shipment papers": "You look at the shipment paper." +
+                                        "They look forged", 
 
-                "Recorded Meeting": "You find a video of a the trade deal between gangs"
-                +"You see that the shipment deal goes to plan. However at the end,"
-                +" a suited guy in glasses and introduces himself as James Wesley."
-                +" The others ask 'Who're you?'. He replies, 'I am here on behalf of'"
-                +" the Kingpin", 
+            "Recorded Meeting": "You find a video of a the trade deal between gangs"
+            +"You see that the shipment deal goes to plan. However at the end,"
+            +" a suited guy in glasses and introduces himself as James Wesley."
+            +" The others ask 'Who're you?'. He replies, 'I am here on behalf of'"
+            +" the Kingpin", 
 
-                "Inmate information":"You take a look at the paper that checks"
-                +" all ins and outs of inmates. You notice that Jasper Evans is"
-                +" inside the prison. However using your senses you can't sense his"+
-                "hearbeat.",
+            "Inmate information":"You take a look at the paper that checks"
+            +" all ins and outs of inmates. You notice that Jasper Evans is"
+            +" inside the prison. However using your senses you can't sense his"+
+            "hearbeat.",
 
-                "Mysterious File": "You read the mysterious file it say: "
-                                    +"WE DON'T CARE ABOUT YOUR SECRECY ANYMORE."
-                                    +" WE KNOW WHO YOU ARE WILSON FISK."
-                                    +" NO MORE PLAYING IN THE SHADOWS. " 
+            "Mysterious File": "You read the mysterious file it say: "
+                                +"WE DON'T CARE ABOUT YOUR SECRECY ANYMORE."
+                                +" WE KNOW WHO YOU ARE WILSON FISK."
+                                +" NO MORE PLAYING IN THE SHADOWS. " 
+        }
+        self.collected_clues = []
+
+    def take_clue(self, room_name, clue1):
+        if room_name in self.rooms_clues and clue1 in self.rooms_clues[room_name]:
+            self.collected_clues.append(self.rooms_clues[room_name][clue1])
+            del self.rooms_clues[room_name][clue1]
+            print(f"You have taken the {clue1} clue from the {room_name}.")
+        else:
+            print("Invalid room name or clue.")
+
+    def examine_clues(self, clue2):
+        if clue2 in self.gen_list:
+            print(self.gen_list[clue2])
+        else:
+            print("No clues collected yet.")
+
+
+class PuzzleMechanic:
+    def __init__(self):
+        self.puzzles = self._init_puzzles()
+
+    def _init_puzzles(self):
+        return {
+            "Warehouse": {
+                "puzzle": "What is the code to unlock the hidden safe? (Hint: It's the year Hell's Kitchen was founded)",
+                "solution": "1890",
+                "reward": "Hidden Safe Contents"
+            },
+            "Leader's Room": {
+                "puzzle": "Solve the riddle to find the hidden drawer: 'I speak without a mouth and hear without ears. I have no body, but I come alive with wind.'",
+                "solution": "Echo",
+                "reward": "Mysterious Key"
+            },
+            "Archive Room": {
+                "puzzle": "What is the missing number in the sequence: 2, 3, 5, 9, 17, ?",
+                "solution": "33",
+                "reward": "Secret Document"
             }
-            self.collected_clues = []
+        }
 
-        def take_clue(self, room_name, clue1):
-            if room_name in self.rooms_clues and clue1 in self.rooms_clues[room_name]:
-
-                self.collected_clues.append(self.rooms_clues[room_name][clue1])
-                del self.rooms_clues[room_name][clue1]
-                print(f"You have taken the {clue1} clue from the {room_name}.")
+    def attempt_puzzle(self, room):
+        if room in self.puzzles:
+            puzzle = self.puzzles[room]
+            print(puzzle["puzzle"])
+            answer = input("Enter your answer: ").strip()
+            if answer == puzzle["solution"]:
+                print(f"Correct! You have obtained: {puzzle['reward']}")
+                return puzzle["reward"]
             else:
-                print("Invalid room name or clue.")
+                print("Incorrect answer.")
+        else:
+            print("No puzzle in this room.")
+        return None
 
-        def examine_clues(self, clue2):
-            if clue2 in self.gen_list:
-                print(self.gen_list[clue2])
-            else:
-                print("No clues collected yet.")
 
 def main():
     move = Move()
     map = Map()
     map2 = DetailedMap()
-    int = Interact(map.rooms_clues.keys())
+    int = Interact(map.rooms_clues)
     inv = Inventory()
+    puzzle_mechanic = PuzzleMechanic()
     print("Welcome to Daredevil: Man Without Fear")
     print("You are Daredevil, the protector of Hell's Kitchen")
     print("Your mission is to rid the streets of crime.")
@@ -306,36 +348,53 @@ def main():
         move.describe_current_location()
         move.describe_current_room()
         print("\nWhat do you want to do?")
-        print("1. Move between locations")
-        print("2. Move within location")
-        print("3. View Current Location Map")
-        print("4. View Locations Map")
-        print("5. View Inventory")
-        print("6. Interact")#Not in Alpha
-        print("7. Quit")
-        user_choice = input().lower()
+        print("1. Move Up")
+        print("2. Move Down")
+        print("3. Move Left")
+        print("4. Move Right")
+        print("5. Search Room")
+        print("6. View Inventory")
+        print("7. Attempt Puzzle")
+        print("8. View Map")
+        print("9. Quit")
+        user_choice = input("Enter the number corresponding to your choice: ").strip()
 
         if user_choice == "1":
-            map.print_location_table()
-            location_name = input("Choose a location to travel to: ").strip()
-            move.move_to_location(location_name)
+            move.move_within_location("north")
         elif user_choice == "2":
-            action = input("Where do you want to move within the location? (north, " 
-            + "south, east, west): ").lower()
-            move.move_within_location(action)
+            move.move_within_location("south")
         elif user_choice == "3":
-            location_name = (list(move.map.overall_map_room.keys())
-                             [move.player_position])
-            map2.print_detailed_map(location_name)
-            map2.view_map()
+            move.move_within_location("west")
         elif user_choice == "4":
-            map.print_location_table()
+            move.move_within_location("east")
         elif user_choice == "5":
-            inv.view_inventory()
+            current_location, rooms = (list(move.map.overall_map_room.items())
+                                       [move.player_position])
+            x, y = move.room_position
+            room_index = x * 3 + y
+
+            if room_index < len(rooms):
+                current_room = rooms[room_index]
+                int.examine_clues(current_room)
         elif user_choice == "6":
-            print("Right This function is still in development.")
-            int.examine_clues(map.rooms_clues.keys())
+            inv.view_inventory()
         elif user_choice == "7":
+            current_location, rooms = (list(move.map.overall_map_room.items())
+                                       [move.player_position])
+            x, y = move.room_position
+            room_index = x * 3 + y
+
+            if room_index < len(rooms):
+                current_room = rooms[room_index]
+                reward = puzzle_mechanic.attempt_puzzle(current_room)
+                if reward:
+                    inv.add_item(reward, f"Reward from solving puzzle in {current_room}")
+        elif user_choice == "8":
+            current_location = (list(move.map.overall_map_room.keys())
+                                [move.player_position])
+            map2.print_detailed_map(current_location)
+            map2.view_map()
+        elif user_choice == "9":
             print("Thanks for playing")
             break 
         else:
@@ -343,4 +402,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

@@ -47,32 +47,33 @@ class Map:
             "Gang Hideout":{
                 #"Main Hall":["Fight Multiple Goons"],#The fight will not be in the alpha
                 "Weapon Storage":["Illegal shipment papers", "graffitti", "weapon rack"],
-                "Leader's Room":["Mysterious file", "safe", "personal diar"],
-                "Surveillance Room":["Recorded Meeting"],
-                "Torture Chamber":["Carl Hoffman"]
+                "Leader's Room":["Mysterious file", "safe", "personal diary"],
+                "Surveillance Room":["Recorded Meeting", "monitors", "tapes"],
+                "Torture Chamber":["Carl Hoffman", "tools", "recording device"]
             },
             "New York Bulletin Building" : {
-                "Archive Room":["New York Bulletin Newspaper"],
-                "Editor's Room":["Jasper Evans"],
+                "Archive Room":["Old newspapers", "Missing files"],
+                "Editor's Room":["Jasper Evans", "Confidential documents", "Safe"],
                 #"Office":["Bullseye"],
-                "Cubicle":[""]
+                "Cubicle":["Sticky notes", "Computer"]
 
             },
             "Prison": {
-                "Cell Block": ["Inmate information"],
+                "Cell Block": ["Hidden notes", "Inmate information", "Crude weapon"],
                 #"Guard Room": ["Security protocols"],
                 #"Warden's Office": ["Warden"],
                 #"Cafeteria": ["Prisoner"],
                 #"Gym": ["Exercise"],
-                "Solitary Confinement": ["Isolated Prisoner"],
+                "Solitary Confinement": ["Scratched messages", "Hidden Compartment", 
+                                         "Isolated Prisoner"],
             },       
             "Wilson Fisk's Penthouse": {
-                "Entrance": ["Buisness documents"],
-                "Art Gallery": ["Expensive art"],
+                "Entrance": ["Surveillance System", "Guest Log", "Buisness Documents"],
+                "Art Gallery": ["Secret Compartments", "Forgery Tools", "Expensive art"],
                 #"Safe Room": ["Weapon mod"],#Not in Alpha
-                "Master Bedroom": ["Personal belongings"],
-                "Private Balcony": ["Panoramic view"],
-                "Living Room": ["Luxury decor"],
+                "Master Bedroom": ["Personal belongings", "personal diary", "hidden safe"],
+                "Private Balcony": ["binoculars", "discarded cigarette", "Panoramic view"],
+                "Living Room": ["conversation recording", "bookshelf" "Luxury decor"],
             }
 
     }
