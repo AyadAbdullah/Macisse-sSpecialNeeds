@@ -1,5 +1,4 @@
-#map.py
-#map.py
+# map.py
 from tabulate import tabulate
 import random
 
@@ -11,43 +10,42 @@ class Map:
         self.overall_map_room = {
             "Hell's Kitchen Docks": [
                 "Lookout Point", "Smuggler's Den", "Warehouse",
-                "Secret Passage", "Office", "Shipping Bay"]
-            ,
+                "Secret Passage", "Office", "Shipping Bay"
+            ],
             "Gang Hideout": [
                 "Main Hall", "Weapon Storage", "Leader's Room", "Secret Exit",
-                "Surveillance Room", "Torture Chamber"]
-            ,
+                "Surveillance Room", "Torture Chamber"
+            ],
             "Hell's Kitchen Downtown": [
                 "Bar", "Apartment Block", "Bank",
-                "Police Station", "Hospital", "The Pierre"]
-            ,
+                "Police Station", "Hospital", "The Pierre"
+            ],
             "Alleyway": [
                 "Backstreet", "Hidden Nook", "Garbage Dump", "Fire Escape",
-                "Dead End", "Underground Entrance"]
-            ,
+                "Dead End", "Underground Entrance"
+            ],
             "New York Bulletin Building": [
                 "Newsroom", "Editor's Office", "Archive Room",
-                "Cubicle","Printing Press", "Rooftop"]
-            ,
+                "Cubicle", "Printing Press", "Rooftop"
+            ],
             "Prison": [
                 "Cell Block", "Guard Room", "Warden's Office", "Cafeteria",
-                "Gym", "Solitary Confinement"]
-            ,
+                "Gym", "Solitary Confinement"
+            ],
             "Wilson Fisk's Penthouse": [
                 "Entrance", "Art Gallery", "Safe Room",
-                "Master Bedroom", "Private Balcony","Living Room"
+                "Master Bedroom", "Private Balcony", "Living Room"
             ]
         }
 
+        self.sub_area_maps = self._create_sub_area_maps()
+
         self.rooms_clues = {
             "Hell's Kitchen Docks":{ 
-                #"Smuggler's Den":["Thug", "Goon"],#Not in Alpha
-                #"Warehouse":["Turk Barrett"],
                 "Office":["Documents", "Letter to Kingpin"],
                 "Shipping Bay":["AK-47", "Glock-19", "M4A1"]
-                },
+            },
             "Gang Hideout":{
-                #"Main Hall":["Fight Multiple Goons"],#The fight will not be in the alpha
                 "Weapon Storage":["Illegal shipment papers"],
                 "Leader's Room":["Mysterious file"],
                 "Surveillance Room":["Recorded Meeting"],
@@ -55,29 +53,27 @@ class Map:
             },
             "New York Bulletin Building" : {
                 "Archive Room":["New York Bulletin Newspaper"],
-                #"Editor's Room":["Jasper Evans"],
-                #"Office":["Bullseye"],
                 "Cubicle":[""]
-
             },
             "Prison": {
                 "Cell Block": ["Inmate information"],
-                #"Guard Room": ["Security protocols"],
-                #"Warden's Office": ["Warden"],
-                #"Cafeteria": ["Prisoner"],
-                #"Gym": ["Exercise"],
                 "Solitary Confinement": ["Isolated Prisoner"],
-            },       
+            },
             "Wilson Fisk's Penthouse": {
                 "Entrance": ["Business documents"],
                 "Art Gallery": ["Expensive art"],
-                #"Safe Room": ["Weapon mod"],#Not in Alpha
                 "Master Bedroom": ["Personal belongings"],
                 "Private Balcony": ["Panoramic view"],
                 "Living Room": ["Luxury decor"],
             }
+        }
 
-    }
+    def _create_sub_area_maps(self):
+        sub_area_maps = {}
+        for main_area, sub_areas in self.overall_map_room.items():
+            sub_area_maps[main_area] = {sub_area: [['' for _ in range(3)] for _ in range(2)]
+                                        for sub_area in sub_areas}
+        return sub_area_maps
 
     def print_game_map_table(self, filename="Overall_map.txt"):
         headers = ['Location', 'Rooms']
@@ -108,6 +104,31 @@ class Map:
             if location == location_name:
                 return index
         return -1
+
+    def print_sub_area_map(self, main_area, sub_area, filename='Sub_area_map.txt'):
+        if main_area not in self.sub_area_maps or sub_area not in self.sub_area_maps[main_area]:
+            print(f"No map found for {sub_area} in {main_area}")
+            return
+
+        map_data = self.sub_area_maps[main_area][sub_area]
+        table = tabulate(map_data, tablefmt="grid")
+
+        try:
+            with open(filename, 'w') as file:
+                file.write(table)
+        except IOError:
+            print(f"Unable to export file for {sub_area} in {main_area}")
+
+    def view_map(self, filename="Rooms_map.txt"):
+
+        #Displays the map file content
+
+        try:
+            with open(filename, 'r') as file:
+                print(file.read())
+        except IOError:
+            print("Error: Unable to read the map file.")
+
 
 class DetailedMap(Map):
     def __init__(self):
@@ -355,8 +376,9 @@ def main():
         print("5. Search Room")
         print("6. View Inventory")
         print("7. Attempt Puzzle")
-        print("8. View Map")
-        print("9. Quit")
+        print("8. View Current Location Map")
+        print("9. View Main Map")
+        print("10. Quit")
         user_choice = input("Enter the number corresponding to your choice: ").strip()
 
         if user_choice == "1":
@@ -395,6 +417,9 @@ def main():
             map2.print_detailed_map(current_location)
             map2.view_map()
         elif user_choice == "9":
+            map.print_game_map_table()
+            map.view_map()
+        elif user_choice == "10":
             print("Thanks for playing")
             break 
         else:
